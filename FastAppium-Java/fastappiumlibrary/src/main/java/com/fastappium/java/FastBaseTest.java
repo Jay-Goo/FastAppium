@@ -76,21 +76,21 @@ public abstract class FastBaseTest {
     public WebDriverWait driverWait;
     public String appPackage;
     public String appActivity;
-    public String appName;
-    public String appDirName;
-
-    public abstract String setAppName();
+    public String apkName;
+    public String apkDirName;
 
     public abstract String setAppPackage();
 
     public abstract String setAppActivity();
 
     public abstract String setDriverServerUrl();
+    //设置apk的路径,设置那么会安装app，如果不设置则直接启动app
+    public abstract String setApkName();
 
-    public String setAppDirName(){
+    public String setApkDirName(){
         File classpathRoot = new File(System.getProperty("user.dir"));
         //app的目录
-        return new File(classpathRoot, "apps/").getPath();
+        return new File(classpathRoot, "apk/").getPath();
     }
 
     public boolean resetAppWhenInstall() {
@@ -108,10 +108,10 @@ public abstract class FastBaseTest {
         capabilities.setCapability("deviceName", "Android Emulator");
         capabilities.setCapability("automationName", "Appium");
         capabilities.setCapability("newCommandTimeout", "300");
-        //设置app的路径,如果设置那么每次都会都会安装app，如果不设置则直接启动app
+        //设置apk的路径,如果设置那么每次都会都会安装app，如果不设置则直接启动app
         if (appFile != null) {
-            capabilities.setCapability("app", new File(setAppDirName(),
-                    setAppName()).getAbsolutePath());
+            capabilities.setCapability("app", new File(setApkDirName(),
+                    setApkName()).getAbsolutePath());
         }
 
         //设置app的包名
@@ -140,17 +140,17 @@ public abstract class FastBaseTest {
     @Before
     public void setUp() throws Exception {
         //app的目录
-        appDirName = setAppDirName();
-        System.out.print(appDirName);
+        apkDirName = setApkDirName();
+        System.out.print(apkDirName);
         //app的名字，对应你apps目录下的文件
-        appName = setAppName();
+        apkName = setApkName();
         File appFile = null;
-        if (appDirName != null && appName != null) {
-            File appDir = new File(setAppDirName());
+        if (apkDirName != null && apkName != null) {
+            File appDir = new File(setApkDirName());
             if (! appDir.exists()) {
                 appDir.mkdir();
             }
-            appFile = new File(appDir, setAppName());
+            appFile = new File(appDir, setApkName());
         }
         appPackage = setAppPackage();
         appActivity = setAppActivity();
